@@ -2,17 +2,13 @@
 
 using namespace std;
 
-
-
-int main()
+void numToBits(unsigned int num)
 {
-    unsigned int n;
-    cin >> n;
     char arr[32];
     unsigned int mask = 1;
     for (int i = 0; i < 32; i++)
     {
-        arr[i] = (unsigned int)(n & mask) > 0 ? '1' : '0';
+        arr[i] = (unsigned int)(num & mask) > 0 ? '1' : '0';
         mask = mask << 1;
     }
     for (int i = 31; i >= 0; --i)
@@ -20,5 +16,19 @@ int main()
         cout << arr[i];
     }
     cout << endl;
+}
+
+union CustomType
+{
+    float realNum;
+    unsigned int intNum;
+};
+
+
+int main()
+{
+    CustomType myVar;
+    cin >> myVar.realNum;
+    numToBits(myVar.intNum);
     return 0;
 }
