@@ -54,8 +54,6 @@ int pop_back(subforwardlist **sfl) 	//удаление элемента с ко�
     
         return popValue; 
     }
-
-
     subforwardlist *curElem = *sfl;
     subforwardlist *prevElem = *sfl;
     while(curElem->next != NULL)
@@ -106,7 +104,7 @@ bool push_where(subforwardlist **sfl, unsigned int where, int d) //добавл�
 
     unsigned int curNum = 0;
     subforwardlist * prevElem = *sfl;
-    while(curNum > where - 1)
+    while(curNum < where - 1)
     {
         curNum ++;
         prevElem = prevElem-> next;
@@ -124,7 +122,7 @@ int erase_where(subforwardlist **sfl, unsigned int where)	//удаление э�
     }
     unsigned int curNum = 0;
     subforwardlist * prevElem = *sfl;
-    while (curNum > where - 1)
+    while (curNum < where - 1)
     {
         curNum ++;
         prevElem = prevElem->next;
