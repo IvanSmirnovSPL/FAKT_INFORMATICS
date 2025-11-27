@@ -140,7 +140,8 @@ unsigned int height(subset_node *sn) // высота дерева
         return 0;
     unsigned int left_height = height(sn->left);
     unsigned int right_height = height(sn->right);
-    return 1 + left_height > right_height ? left_height : right_height;
+    unsigned int childrens_height = left_height > right_height ? left_height : right_height;
+    return 1 + childrens_height;
 
 }
 // void destructor(subset_node *sn); // очистить всю используемую память
@@ -334,11 +335,11 @@ int main()
     cout << "005 Remove of a random sequence (0 - 10): \t\t\t\t" << finish - start << endl;
     total += finish - start;
 //----------- Test 006 Insert of a random sequence (0 - 100)
-    // start = get_time();
-    // for (unsigned int i = 0; i < n; i++)
-    // {
-    //     insert(&sn, rand_sequence_100[i]);
-    // }
+    start = get_time();
+    for (unsigned int i = 0; i < n; i++)
+    {
+        insert(&sn, rand_sequence_100[i]);
+    }
     // finish = get_time();
     // content = DFS(sn);
     // size_content = size(sn);
