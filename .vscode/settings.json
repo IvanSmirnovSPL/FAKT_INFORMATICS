@@ -42,6 +42,10 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "chrono": "cpp",
+        "climits": "cpp",
+        "random": "cpp",
+        "xiosbase": "cpp"
     }
 }
