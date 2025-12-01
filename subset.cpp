@@ -61,6 +61,44 @@ bool insert(subset_node **sn, int k) // добавление элемента в
     return true;
 
 }
+subset_node* del_node(subset_node *sn, int k)
+{
+    if (sn == NULL)
+        return sn;
+    if (k == sn->key)
+    {
+        if (sn->left == NULL && sn->right == NULL)
+        {
+            delete sn;
+            sn = NULL;
+        }
+        else if (sn->left == NULL)
+        {
+            subset_node *tmp = sn;
+            sn = sn->right;
+            delete tmp;
+        }
+        else if (sn->right == NULL)
+        {
+            subset_node *tmp = sn;
+            sn = sn->left;
+            delete tmp;
+        }
+        else
+        {
+            subset_node *cur_elem = sn->right;
+            while(cur_elem->left != NULL)
+                cur_elem = cur_elem->left;
+            sn->key = cur_elem->key;
+            sn->right = del_node(sn->right, cur_elem->key);
+        }
+    }
+    else if (k < sn->key)
+        sn->left = del_node(sn->left, k);
+    else if (k > sn->key)
+        sn->right = del_node(sn->right, k);
+    return sn;
+}
 bool remove(subset_node **sn, int k) // удаление элемента из дерева (если элемента не нашлось, то ничего не удалять и вернуть false)
 {
     if (*sn == NULL) // пустой
@@ -68,71 +106,7 @@ bool remove(subset_node **sn, int k) // удаление элемента из �
     if (find(*sn, k) == NULL) // нет такого элемента
         return false;
 
-    subset_node *cur_elem = *sn;
-    subset_node *prev_elem = *sn;
-    while(true)
-    {
-        if (cur_elem->key == k)
-            break;
-        prev_elem = cur_elem;
-        if (k < cur_elem->key)
-            cur_elem = cur_elem->left;
-        else
-            cur_elem = cur_elem->right;
-    }
-
-    if (cur_elem == prev_elem) // всего один элемент
-    {
-        delete *sn;
-        *sn = NULL;
-        return true;
-    }
-
-    if (cur_elem->left == NULL && cur_elem->right == NULL) // нет детей
-    {
-        if (k < prev_elem->key)
-            prev_elem ->left = NULL;
-        else
-            prev_elem ->right = NULL;
-        delete cur_elem;
-        return true;
-    }
-
-    if (cur_elem->left == NULL || cur_elem->right == NULL) // только один ребёнок
-    {
-        if (cur_elem->left == NULL) // нет левого ребёнка
-        {
-            subset_node * exchange_elem = cur_elem->right;
-            cur_elem->key = exchange_elem->key;
-            cur_elem->right = exchange_elem->right;
-            cur_elem->left = exchange_elem->left;
-            delete exchange_elem;
-        }
-        else // нет правого ребёнка
-        {
-            subset_node * exchange_elem = cur_elem->left;
-            cur_elem->key = exchange_elem->key;
-            cur_elem->right = exchange_elem->right;
-            cur_elem->left = exchange_elem->left;
-            delete exchange_elem;
-        }
-        return true;
-    }
-
-    // есть оба ребёнка
-    subset_node* right_tree_elem_parent = cur_elem->right;
-    subset_node* smallest_right_tree_elem = cur_elem->right;
-    while(smallest_right_tree_elem->left != NULL)
-    {
-        right_tree_elem_parent = smallest_right_tree_elem;
-        smallest_right_tree_elem = smallest_right_tree_elem->left;
-    }
-    cur_elem->key = smallest_right_tree_elem->key;
-    if (right_tree_elem_parent == smallest_right_tree_elem) // только один элемент в правом поддереве
-        cur_elem->right = NULL;
-    else
-       right_tree_elem_parent->left = NULL;
-    delete smallest_right_tree_elem;
+    *sn = del_node(*sn, k);
     return true;
 }
 unsigned int size(subset_node *sn) // количество элементов в дереве
@@ -188,12 +162,12 @@ int* DFS (subset_node *sn) //обход в глубину, возвращает 
 
 
 
+
 #include <random>
 #include <chrono>
 #include <climits>
 using std::cout;
 using std::endl;
-
 double get_time()
 {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch()).count()/1e6;
@@ -295,7 +269,7 @@ int main()
     total += finish - start;
 //----------- Test 002 Remove of a sequent sequence
     start = get_time();
-    for (unsigned int i = 0; i < 1; i++)
+    for (unsigned int i = 0; i < n; i++)
     {
         remove(&sn, sequent_sequence[i]);
     }
@@ -321,11 +295,6 @@ int main()
     finish = get_time();
     auto content = DFS(sn);
     auto size_content = size(sn);
-    for (int j = 0; j < size_content; j++)
-    {
-        cout << content[j] << " ";
-    }
-    cout << endl;
     for (unsigned int i = 0; i < size_content - 1; i++)
         if (content[i] >= content[i + 1])
         {
@@ -568,6 +537,5 @@ int main()
     delete[] rand_sequence_n;
     delete[] rand_sequence_unique;
     delete[] sorted_sequence_unique;
-    destructor(sn);
     return 0;
 }
