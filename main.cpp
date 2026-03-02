@@ -2,20 +2,32 @@
 
 using namespace std;
 
+struct ZooKeeper
+{
+public:
+    ZooKeeper(){}
+    ~ZooKeeper() = default;
+    static int _animalsNum;
+    static void washHands()
+    {
+        cout << "I wash hands " << _animalsNum << " times!" << endl;
+    }
+};
+
+int ZooKeeper::_animalsNum = 0;
+
 int main()
 {
-    cout << "Hi!" << endl;
+    ZooKeeper z1{};
+    ZooKeeper z2{};
 
-    int a = 5;
-    int b = 6;
+    z1._animalsNum += 1;
+    z1.washHands();
+    z2.washHands();
 
-    const int c = 0;
-
-    const int * p0 = &a; // *p0 = 3; не пройдёт, p0 = &b; пройдёт
-    int * const p1 = &a; // *p1 = 3; пройдёт, p1 = &b; не пройдёт
-    const int * const p2 = &a; // *p2 = 3; не пройдёт, p2 = &b; пройдёт
-
-    const int& abc = a;
+    z2._animalsNum += 1;
+    z1.washHands();
+    z2.washHands();
 
     return 0;
 }
